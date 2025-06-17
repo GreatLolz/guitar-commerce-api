@@ -22,7 +22,13 @@ namespace GuitarCommerceAPI.Services
 
         public async Task<User?> Login(string username, string password)
         {
-            throw new NotImplementedException();
+            User? user = await _db.Users.SingleOrDefaultAsync(u => u.Name == username);
+            if (user == null) {
+                return null;
+            }
+
+            PasswordVerificationResult result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
+            return result == PasswordVerificationResult.Success ? user : null;
         }
     }
 }
