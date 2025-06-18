@@ -18,9 +18,10 @@ namespace GuitarCommerceAPI.Services
         public async Task<User?> Register(string username, string password)
         {
             if (await _db.Users.AnyAsync(u => u.Name == username)) {
-                return null; // User already exists
+                return null;
             }
             User user = new User {
+                Id = Guid.NewGuid().ToString(),
                 Name = username,
                 PasswordHash = _passwordHasher.HashPassword(null, password)
             };

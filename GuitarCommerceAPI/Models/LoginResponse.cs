@@ -2,10 +2,10 @@
 {
     public class LoginResponse
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public string Username { get; set; }
 
-        public LoginResponse(int userId, string username)
+        public LoginResponse(string userId, string username)
         {
             UserId = userId;
             Username = username;
