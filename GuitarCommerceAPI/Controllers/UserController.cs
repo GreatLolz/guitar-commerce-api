@@ -22,54 +22,78 @@ namespace GuitarCommerceAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] LoginRequest request)
         {
-            if (request == null || string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            try
             {
-                return BadRequest("Username and password are required.");
+                if (request == null || string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+                {
+                    return BadRequest("Username and password are required.");
+                }
+                var result = await userService.Register(request.Username, request.Password);
+                if (!result)
+                {
+                    return BadRequest("User registration failed. Username may already be taken.");
+                }
+                return Ok();
             }
-            var result = await userService.Register(request.Username, request.Password);
-            if (!result)
+            catch (Exception ex)
             {
-                return BadRequest("User registration failed. Username may already be taken.");
+                Console.WriteLine($"Error while registering user: {ex.Message}");
+                return StatusCode(500, "An error occured while registering user.");
             }
-            return Ok();
         }
 
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            if (request == null || string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            try
             {
-                return BadRequest("Username and password are required.");
-            }
+                if (request == null || string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+                {
+                    return BadRequest("Username and password are required.");
+                }
 
-            var user = await userService.Login(request.Username, request.Password);
-            if (user == null)
+                var user = await userService.Login(request.Username, request.Password);
+                if (user == null)
+                {
+                    return Unauthorized("Invalid username or password.");
+                }
+
+                string token = identityService.GenerateToken(user);
+                return Ok(new LoginResponse { Token = token });
+            }
+            catch (Exception ex)
             {
-                return Unauthorized("Invalid username or password.");
+                Console.WriteLine($"Error while logging in user: {ex.Message}");
+                return StatusCode(500, "An error occured while logging in user.");
             }
-
-            string token = identityService.GenerateToken(user);
-            return Ok(new LoginResponse { Token = token });
         }
 
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetUserData()
         {
-            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
+            try
             {
-                return Unauthorized();
-            }
+                string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized();
+                }
 
-            User? user = await userService.GetUserData(userId);
-            if (user == null)
+                User? user = await userService.GetUserData(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(new UserDataResponse { UserId = user.Id, Username = user.Name });
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                Console.WriteLine($"Error while fetching user data: {ex.Message}");
+                return StatusCode(500, "An error occured while fetching user data.");
             }
-
-            return Ok(new UserDataResponse { UserId = user.Id, Username = user.Name });
         }
     }
 }
