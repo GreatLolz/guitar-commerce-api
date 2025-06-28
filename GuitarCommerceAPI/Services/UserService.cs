@@ -16,11 +16,6 @@ namespace GuitarCommerceAPI.Services
             _db = db;
         }
 
-        private async Task<User?> getUserById(string id)
-        {
-            return await _db.Users.SingleOrDefaultAsync(u => u.Id == id);
-        }
-
         public async Task<bool> Register(string username, string password)
         {
             if (await _db.Users.AnyAsync(u => u.Name == username))
@@ -51,11 +46,9 @@ namespace GuitarCommerceAPI.Services
             return result == PasswordVerificationResult.Success ? user : null;
         }
 
-        public async Task<User?> GetUserData(string userId)
+        public async Task<User?> GetUserData(string id)
         {
-            User? user = await getUserById(userId);
-
-            return user;
+            return await _db.Users.SingleOrDefaultAsync(u => u.Id == id);
         }
     }
 }
