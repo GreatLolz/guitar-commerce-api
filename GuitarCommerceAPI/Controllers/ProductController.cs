@@ -22,12 +22,31 @@ namespace GuitarCommerceAPI.Controllers
             {
                 List<Product> products = await productService.ListProductsAsync(count, filter);
 
-                return Ok(new ProductsResponse { Products = products });
+                return Ok(new ListProductsResponse { Products = products });
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error while fetching products: " + ex.Message);
                 return StatusCode(500, "An error has occurred while fetching products.");
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductById(string id)
+        {
+            try
+            {
+                Product? product = await productService.GetProductByIdAsync(id);
+                if (product == null)
+                {
+                    return NotFound("Product not found.");
+                }
+                return Ok(new GetProductResponse { Product = product});
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error while fetching product: " + ex.Message);
+                return StatusCode(500, "An error has occurred while fetching product.");
             }
         }
 
