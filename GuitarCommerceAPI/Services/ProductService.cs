@@ -7,7 +7,7 @@ namespace GuitarCommerceAPI.Services
     public class ProductService : IProductService
     {
         private readonly AppDbContext db;
-        private readonly List<string> productFilters = new List<string>
+        private readonly List<string> productCategories = new List<string>
         {
             "guitars",
             "basses",
@@ -23,17 +23,17 @@ namespace GuitarCommerceAPI.Services
             this.db = db;
         }
 
-        public async Task<List<Product>> ListProductsAsync(int count = 20, string? filter = null)
+        public async Task<List<Product>> ListProductsAsync(int count = 20, string? category = null)
         {
-            if (filter != null && !productFilters.Contains(filter.ToLowerInvariant()))
+            if (category != null && !productCategories.Contains(category.ToLowerInvariant()))
             {
-                Console.WriteLine("Invalid filter has been provided while fetching products. Defaulting to any.");
-                filter = null;
+                Console.WriteLine("Invalid category has been provided while fetching products. Defaulting to any.");
+                category = null;
             }
 
 
             return await db.Products
-                .Where(p => filter == null || p.Category == filter)
+                .Where(p => category == null || p.Category == category)
                 .Take(count)
                 .ToListAsync();
         }

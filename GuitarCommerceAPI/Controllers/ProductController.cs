@@ -16,11 +16,11 @@ namespace GuitarCommerceAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListProducts(int count = 20, string? filter = null)
+        public async Task<IActionResult> ListProducts(int count = 20, string? category = null)
         {
             try
             {
-                List<Product> products = await productService.ListProductsAsync(count, filter);
+                List<Product> products = await productService.ListProductsAsync(count, category);
 
                 return Ok(new ListProductsResponse { Products = products });
             }
