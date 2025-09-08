@@ -1,4 +1,5 @@
-﻿using GuitarCommerceAPI.Models;
+﻿using Azure.Core;
+using GuitarCommerceAPI.Models;
 using GuitarCommerceAPI.Models.Cart;
 using GuitarCommerceAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -75,6 +76,31 @@ namespace GuitarCommerceAPI.Controllers
             {
                 Console.WriteLine($"Error while adding item to cart: {ex.Message}");
                 return StatusCode(500, "An error occured while adding item to cart.");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCartItem(string id)
+        {
+            try
+            {
+                string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized();
+                }
+
+                if(!await cartService.DeleteCartItem(userId, id))
+                {
+                    return NotFound("Cart item not found or belongs to another user's cart.");
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while removing item from cart: {ex.Message}");
+                return StatusCode(500, "An error occured while removing item from cart.");
             }
         }
     }
