@@ -18,6 +18,5 @@ namespace GuitarCommerceAPI.Models.Cart
 
         public User User { get; set; } = null!;
         public ICollection<CartItem> Items { get; set; } = new List<CartItem>();
-        public int NextItemId { get; set; } = 0;
     }
 }

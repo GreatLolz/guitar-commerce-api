@@ -8,7 +8,7 @@ namespace GuitarCommerceAPI.Models.Cart
     public class CartItem
     {
         [Required]
-        public required int Id { get; set; }
+        public required string Id { get; set; }
 
         [Required]
         public required string CartId { get; set; }
