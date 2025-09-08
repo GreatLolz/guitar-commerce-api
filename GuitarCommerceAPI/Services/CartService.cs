@@ -67,13 +67,22 @@ namespace GuitarCommerceAPI.Services
                 return false;
             }
 
-            if (item.Cart.UserId != userId)
+            Cart cart = item.Cart;
+
+            if (cart.UserId != userId)
             {
                 return false;
             }
 
             db.CartItems.Remove(item);
             await db.SaveChangesAsync();
+
+            if (cart.Items.Count == 0)
+            {
+                db.Carts.Remove(cart);
+                await db.SaveChangesAsync();
+            }
+
             return true;
         }
     }
