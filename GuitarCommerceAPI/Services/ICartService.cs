@@ -7,6 +7,6 @@ namespace GuitarCommerceAPI.Services
         Task<Cart?> GetActiveCart(string userId);
         Task<ICollection<Cart>> GetCartHistory(string userId);
         Task AddCartItem(string userId, string productId, int quantity);
-        Task<bool> DeleteCartItem(string userId, int itemId);
+        Task<bool> DeleteCartItem(string userId, string itemId);
     }
 }
