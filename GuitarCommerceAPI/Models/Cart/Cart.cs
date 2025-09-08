@@ -16,7 +16,8 @@ namespace GuitarCommerceAPI.Models.Cart
         [Required, DefaultValue(true)]
         public required bool IsActive { get; set; }
 
-        public required User User { get; set; }
-        public required ICollection<CartItem> Items { get; set; }
+        public User User { get; set; } = null!;
+        public ICollection<CartItem> Items { get; set; } = new List<CartItem>();
+        public int NextItemId { get; set; } = 0;
     }
 }

@@ -19,7 +19,7 @@ namespace GuitarCommerceAPI.Models.Cart
         [Required]
         public required int Quantity { get; set; }
 
-        public required Cart Cart { get; set; }
-        public required Product Product { get; set; }
+        public Cart Cart { get; set; } = null!;
+        public Product Product { get; set; } = null!;
     }
 }
