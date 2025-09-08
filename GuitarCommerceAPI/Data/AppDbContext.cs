@@ -1,4 +1,5 @@
 ﻿using GuitarCommerceAPI.Models;
+using GuitarCommerceAPI.Models.Cart;
 using GuitarCommerceAPI.Models.Products;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace GuitarCommerceAPI.Data
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Cart> Carts { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -19,6 +21,8 @@ namespace GuitarCommerceAPI.Data
             modelBuilder.Entity<User>().HasIndex(u => u.Name).IsUnique();
 
             modelBuilder.Entity<Product>().HasKey(p => p.Id);
+
+            modelBuilder.Entity<Cart>().HasKey(c => c.Id);
         }
     }
 }
