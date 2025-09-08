@@ -33,15 +33,47 @@ namespace GuitarCommerceAPI.Controllers
                 Cart? cart = await cartService.GetActiveCart(userId);
                 if (cart == null)
                 {
-                    return Ok(new GetCartResponse { CartItems = [] });
+                    return Ok(new GetCartResponse
+                    {
+                        CartItems = []
+                    });
                 }
 
-                return Ok(new GetCartResponse { CartItems = cart.Items.ToList()});
+                return Ok(new GetCartResponse
+                {
+                    CartItems = cart.Items.Select(item => new CartItemDTO
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity
+                    }).ToList()
+                });
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error while fetching cart items: {ex.Message}");
                 return StatusCode(500, "An error occured while fetching cart items.");
+            }
+        }
+
+        [HttpPost()]
+        public async Task<IActionResult> AddCartItem([FromBody] AddCartItemRequest request)
+        {
+            try
+            {
+                string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized();
+                }
+
+                await cartService.AddCartItem(userId, request.ProductId, request.Quantity);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while adding item to cart: {ex.Message}");
+                return StatusCode(500, "An error occured while adding item to cart.");
             }
         }
     }
