@@ -4,8 +4,9 @@ namespace GuitarCommerceAPI.Services
 {
     public interface ICartService
     {
-        Task<Cart> GetCart(string userId);
-        Task AddCartItem(string cartId, string productId);
-        Task DeleteCartItem(string cartId, int itemId);
+        Task<Cart?> GetActiveCart(string userId);
+        Task<ICollection<Cart>> GetCartHistory(string userId);
+        Task AddCartItem(string userId, string productId, int quantity);
+        Task<bool> DeleteCartItem(string userId, int itemId);
     }
 }
