@@ -67,9 +67,7 @@ namespace GuitarCommerceAPI.Services
                 return false;
             }
 
-            Cart cart = item.Cart;
-
-            if (cart.UserId != userId)
+            if (item.Cart.UserId != userId)
             {
                 return false;
             }
@@ -77,10 +75,14 @@ namespace GuitarCommerceAPI.Services
             db.CartItems.Remove(item);
             await db.SaveChangesAsync();
 
-            if (cart.Items.Count == 0)
+            Cart? activeCart = await GetActiveCart(userId);
+            if (activeCart != null)
             {
-                db.Carts.Remove(cart);
-                await db.SaveChangesAsync();
+                if (!activeCart.Items.Any())
+                {
+                    db.Carts.Remove(activeCart);
+                    await db.SaveChangesAsync();
+                }
             }
 
             return true;
