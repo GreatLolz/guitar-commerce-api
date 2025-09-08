@@ -2,6 +2,6 @@
 {
     public class GetCartResponse
     {
-        public required List<CartItem> CartItems {  get; set; }
+        public required List<CartItemDTO> CartItems { get; set; }
     }
 }
