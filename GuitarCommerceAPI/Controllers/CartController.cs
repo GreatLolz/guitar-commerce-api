@@ -43,6 +43,7 @@ namespace GuitarCommerceAPI.Controllers
                 {
                     CartItems = cart.Items.Select(item => new CartItemDTO
                     {
+                        CartItemId = item.Id,
                         ProductId = item.ProductId,
                         Quantity = item.Quantity
                     }).ToList()
