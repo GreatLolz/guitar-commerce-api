@@ -2,8 +2,8 @@
 using GuitarCommerceAPI.Models;
 using GuitarCommerceAPI.Models.Cart;
 using GuitarCommerceAPI.Models.Order;
+using GuitarCommerceAPI.Models.Products;
 using Microsoft.EntityFrameworkCore;
-using Stripe;
 
 namespace GuitarCommerceAPI.Services
 {
@@ -18,7 +18,7 @@ namespace GuitarCommerceAPI.Services
             this.db = db;
             this.cartService = cartService;
             this.configuration = configuration;
-            StripeConfiguration.ApiKey = this.configuration.GetValue<string>("StripeConfig:SecretKey");
+            Stripe.StripeConfiguration.ApiKey = this.configuration.GetValue<string>("StripeConfig:SecretKey");
         }
 
         public async Task<string?> Checkout(string userId, CheckoutData checkoutData)
@@ -29,8 +29,8 @@ namespace GuitarCommerceAPI.Services
                 return null;
             }
 
-            PaymentIntentService paymentIntentService = new PaymentIntentService();
-            PaymentIntent paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions
+            Stripe.PaymentIntentService paymentIntentService = new Stripe.PaymentIntentService();
+            Stripe.PaymentIntent paymentIntent = paymentIntentService.Create(new Stripe.PaymentIntentCreateOptions
             {
                 Amount = (long)(order.Amount * 100),
                 Currency = "usd",
@@ -80,13 +80,19 @@ namespace GuitarCommerceAPI.Services
 
             foreach (CartItem item in userCart.Items)
             {
+                Product? product = await db.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId);
+                if (product == null)
+                {
+                    return null;
+                }
+
                 OrderItem orderItem = new OrderItem
                 {
                     Id = Guid.NewGuid().ToString(),
                     OrderId = orderId,
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
-                    UnitPrice = item.Product.Price,
+                    UnitPrice = product.Price
                 };
 
                 db.OrderItems.Add(orderItem);
