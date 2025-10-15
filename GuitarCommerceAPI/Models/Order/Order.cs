@@ -11,6 +11,12 @@ namespace GuitarCommerceAPI.Models.Order
         [Required]
         public required string Id { get; set; }
 
+        [Required]
+        public required string UserId { get; set; }
+
+        [Required]
+        public required ShippingAddress ShippingAddress { get; set; }
+
         [Required, Precision(18, 2)]
         public required decimal Amount { get; set; }
 
