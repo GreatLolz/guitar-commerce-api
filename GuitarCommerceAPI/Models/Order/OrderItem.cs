@@ -22,7 +22,6 @@ namespace GuitarCommerceAPI.Models.Order
         [Required, Precision(18, 2)]
         public required decimal UnitPrice { get; set; }
 
-        [Required]
-        public required Order Order { get; set; }
+        public Order Order { get; set; } = null!;
     }
 }
