@@ -47,12 +47,22 @@ namespace GuitarCommerceAPI.Services
             return paymentIntent.ClientSecret;
         }
 
-        public async Task ChangeOrderStatus(string paymentIntentId, OrderStatus status)
+        public async Task ChangeOrderPaymentStatus(string paymentIntentId, OrderPaymentStatus status)
         {
             Order? order = await db.Orders.FirstOrDefaultAsync(order => order.PaymentIntentId == paymentIntentId);
             if (order != null)
             {
-                order.Status = status;
+                order.PaymentStatus = status;
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public async Task ChangeOrderDeliveryStatus(string orderId, OrderDeliveryStatus status)
+        {
+            Order? order = await db.Orders.FirstOrDefaultAsync(order => order.Id == orderId);
+            if (order != null)
+            {
+                order.DeliveryStatus = status;
                 await db.SaveChangesAsync();
             }
         }
@@ -99,7 +109,8 @@ namespace GuitarCommerceAPI.Services
                     ZipCode = checkoutData.ZipCode,
                 },
                 Amount = orderItems.Sum(item => item.Quantity * item.UnitPrice),
-                Status = OrderStatus.PENDING,
+                PaymentStatus = OrderPaymentStatus.PENDING,
+                DeliveryStatus = OrderDeliveryStatus.UNPAID,
                 CreatedAt = DateTime.Now,
             };
             db.Orders.Add(order);

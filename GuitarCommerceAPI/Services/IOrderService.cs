@@ -5,6 +5,7 @@ namespace GuitarCommerceAPI.Services
     public interface IOrderService
     {
         Task<string?> Checkout(string userId, CheckoutData checkoutData);
-        Task ChangeOrderStatus(string paymentIntentId, OrderStatus status);
+        Task ChangeOrderPaymentStatus(string paymentIntentId, OrderPaymentStatus status);
+        Task ChangeOrderDeliveryStatus(string orderId, OrderDeliveryStatus status);
     }
 }

@@ -20,8 +20,11 @@ namespace GuitarCommerceAPI.Models.Order
         [Required, Precision(18, 2)]
         public required decimal Amount { get; set; }
 
-        [Required, DefaultValue(OrderStatus.PENDING)]
-        public OrderStatus Status { get; set; } = OrderStatus.PENDING;
+        [Required, DefaultValue(OrderPaymentStatus.PENDING)]
+        public OrderPaymentStatus PaymentStatus { get; set; } = OrderPaymentStatus.PENDING;
+
+        [Required, DefaultValue(OrderDeliveryStatus.UNPAID)]
+        public OrderDeliveryStatus DeliveryStatus { get; set; } = OrderDeliveryStatus.PREPARING;
 
         public string? PaymentIntentId { get; set; }
 

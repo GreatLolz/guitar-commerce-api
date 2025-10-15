@@ -1,6 +1,6 @@
 ﻿namespace GuitarCommerceAPI.Models.Order
 {
-    public enum OrderStatus
+    public enum OrderPaymentStatus
     {
         PENDING,
         COMPLETED,
