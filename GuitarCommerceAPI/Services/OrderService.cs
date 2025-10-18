@@ -53,6 +53,10 @@ namespace GuitarCommerceAPI.Services
             if (order != null)
             {
                 order.PaymentStatus = status;
+                if (order.PaymentStatus == OrderPaymentStatus.COMPLETED)
+                {
+                    order.PaidAt = DateTime.Now;
+                }
                 await db.SaveChangesAsync();
             }
         }
