@@ -18,4 +18,5 @@ COPY --from=build /app/publish .
 
 EXPOSE 5180
 
-ENTRYPOINT ["dotnet", "GuitarCommerceAPI.dll"]
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
