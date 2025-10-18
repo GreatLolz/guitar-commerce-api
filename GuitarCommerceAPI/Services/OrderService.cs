@@ -56,6 +56,11 @@ namespace GuitarCommerceAPI.Services
                 if (order.PaymentStatus == OrderPaymentStatus.COMPLETED)
                 {
                     order.PaidAt = DateTime.Now;
+                    Cart? userCart = await cartService.GetActiveCart(order.UserId);
+                    if (userCart != null)
+                    {
+                        userCart.IsActive = false;
+                    } 
                 }
                 await db.SaveChangesAsync();
             }
