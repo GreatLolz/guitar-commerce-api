@@ -61,7 +61,7 @@ namespace GuitarCommerceAPI.Controllers
                 PaymentIntent? intent = stripeEvent.Data.Object as PaymentIntent;
                 if (intent == null)
                 {
-                    throw new Exception("Could not find payment intent.");
+                    return Ok();
                 }
 
                 switch (stripeEvent.Type)
