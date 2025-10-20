@@ -73,7 +73,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Configuration["SWAGGER_DOCS"] == "1")
 {
     app.UseSwagger();
     app.UseSwaggerUI();
